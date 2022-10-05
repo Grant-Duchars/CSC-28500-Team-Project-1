@@ -1,9 +1,20 @@
+/*
+Team Name: XXXXXX
+Team Members: Grant Duchars,
+October 10, 2022 - Applied Discrete Structures, Fall 2022, Dr. J
+
+Description: A menu-driven program to convert user entered numbers
+Possible convertions include: Decimal to Binary,
+                              Hexadecimal to Binary,
+                              Binary to Decimal,
+                              Binary to Hexadecimal
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 void convertDecimalToBinary(char *input);
-void convertDecimalToBinary(int num, char *result);
+void convertDecimalToBinaryHelper(int num, char *result);
 
 int main()
 {
@@ -77,7 +88,7 @@ void convertDecimalToBinary(char *input)
     // Clear out the result string
     strcpy(result, "");
     // Recursively run the function until num is zero
-    convertDecimalToBinary((num / 2), result);
+    convertDecimalToBinaryHelper((num / 2), result);
     // After recursion append last digit
     (num % 2) ? strcat(result, "1") : strcat(result, "0");
     // Print out the binary number result
@@ -86,13 +97,16 @@ void convertDecimalToBinary(char *input)
     free(result);
 }
 
-void convertDecimalToBinary(int num, char *result)
+/**
+ * Helper method for convertDecimalToBinary()
+ */
+void convertDecimalToBinaryHelper(int num, char *result)
 {
     // If num is not zero
     if (num)
     {
         // Recursively run the function until num is zero
-        convertDecimalToBinary((num / 2), result);
+        convertDecimalToBinaryHelper((num / 2), result);
         // On the way up append the correct digit to result string
         (num % 2) ? strcat(result, "1") : strcat(result, "0");
     }
