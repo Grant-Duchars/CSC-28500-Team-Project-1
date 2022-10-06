@@ -12,9 +12,11 @@ Possible convertions include: Decimal to Binary,
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 void convertDecimalToBinary(char *input);
 void convertDecimalToBinaryHelper(int num, char *result);
+void convertBinaryToDecimal(char *input);
 
 int main()
 {
@@ -24,8 +26,8 @@ int main()
     {
         // Prompt user with menu
         printf("\033[1;35mCatchy Name Conversion Program\n\n\033[0;36m1. Convert base 10 to binary\n2. Convert binary to base 10\n3. Convert base 16 to binary\n4. Convert binary to base 16\n5. End program\n\n\033[33mPlease enter your selection:\033[0m ");
-        char inputBuffer[10];
-        char numBuffer[20];
+        char *inputBuffer = (char *)malloc(32);
+        char *numBuffer = (char *)malloc(32);
         // Get user input
         fgets(inputBuffer, sizeof(inputBuffer), stdin);
         // Remove new line character from user input
@@ -47,7 +49,7 @@ int main()
             printf("\033[1;1H\033[2J\033[33m\nPlease enter your binary number to convert to base 10:\033[0m ");
             fgets(numBuffer, sizeof(numBuffer), stdin);
             inputBuffer[strcspn(inputBuffer, "\n")] = 0;
-            // TODO: convertBinaryToDecimal(numBuffer);
+            convertBinaryToDecimal(numBuffer);
         }
         else if (strcmp(inputBuffer, "3") == 0) // Convert Hexadecimal to Binary
         {
@@ -72,6 +74,8 @@ int main()
         {
             printf("\033[1;1H\033[2J\033[4;31m\nERROR: Please enter a number from the list\033[0m\n\n");
         }
+        free(numBuffer);
+        free(inputBuffer);
     }
 }
 
@@ -112,9 +116,30 @@ void convertDecimalToBinaryHelper(int num, char *result)
     }
 }
 
-void convertBinaryToDecimal(char num[])
+/**
+ * Function to convert a binary integer to a decimal integer
+ * @param input A string of the number you wish to convert
+ */
+void convertBinaryToDecimal(char *input)
 {
-    // TODO: Implement this
+    // Initialize decimal result variable
+    int result = 0;
+    // Calculate most significant bit's power
+    int power = strlen(input) - 2;
+    // Loop through binary number string
+    for (int i = 0; input[i] != '\0'; ++i)
+    {
+        // Only care about ones in binary number string
+        if (input[i] == '1')
+        {
+            // Add two^power of the current bit to result
+            result += pow(2, power);
+        }
+        // Decrement power of current bit by one
+        --power;
+    }
+    // Print out the decimal number result
+    printf("\033[1;1H\033[2J\033[1;4;32m\nYour decimal number is:\033[0m %d\n\n", result);
 }
 
 void convertHexToBinary(char num[])
