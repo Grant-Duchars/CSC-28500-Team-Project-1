@@ -21,9 +21,14 @@ void convertDecimalToBinaryHelper(int num, char *result);
 void convertBinaryToDecimal(string input);
 void convertHexToBinary(string input);
 void convertBinaryToHex(string input);
+void buildConversionMaps();
+
+unordered_map<char, string> hexToBinaryTable;
+unordered_map<string, string> binaryToHexTable;
 
 int main()
 {
+    buildConversionMaps();
     // Clear out terminal output
     cout << "\033[1;1H\033[2J\n\n"
          << endl;
@@ -88,7 +93,7 @@ void convertDecimalToBinary(string input)
     // Convert string to integer
     int num = atoi(input.c_str());
     // Allocate space for result string
-    char *result = (char *)malloc(512);
+    char *result = (char *)malloc(1024);
     // Clear out the result string
     strcpy(result, "");
     // Recursively run the function until num is zero
@@ -151,80 +156,18 @@ void convertBinaryToDecimal(string input)
  */
 void convertHexToBinary(string input)
 {
-    // Create string to store output
-    char *binaryNumber = (char *)malloc(512);
-    strcpy(binaryNumber, "");
-    // Iterate through input string and append matching binary digits to output string
     int inputLen = input.length();
+    string result;
+    // Iterate through input and use lookup table to convert
     for (int i = 0; i < inputLen; ++i)
     {
-        switch ((int)input[i])
-        {
-        case '0':
-            strcat(binaryNumber, "0000");
-            break;
-        case '1':
-            strcat(binaryNumber, "0001");
-            break;
-        case '2':
-            strcat(binaryNumber, "0010");
-            break;
-        case '3':
-            strcat(binaryNumber, "0011");
-            break;
-        case '4':
-            strcat(binaryNumber, "0100");
-            break;
-        case '5':
-            strcat(binaryNumber, "0101");
-            break;
-        case '6':
-            strcat(binaryNumber, "0110");
-            break;
-        case '7':
-            strcat(binaryNumber, "0111");
-            break;
-        case '8':
-            strcat(binaryNumber, "1000");
-            break;
-        case '9':
-            strcat(binaryNumber, "1001");
-            break;
-        case 'A':
-            strcat(binaryNumber, "1010");
-            break;
-        case 'B':
-            strcat(binaryNumber, "1011");
-            break;
-        case 'C':
-            strcat(binaryNumber, "1100");
-            break;
-        case 'D':
-            strcat(binaryNumber, "1101");
-            break;
-        case 'E':
-            strcat(binaryNumber, "1110");
-            break;
-        case 'F':
-            strcat(binaryNumber, "1111");
-            break;
-        default:
-            break;
-        }
+        result += hexToBinaryTable[input[i]];
     }
-    // Count how many leading zeroes there are in the output string
-    int cutIndex = 0;
-    while (binaryNumber[cutIndex] != '1')
-    {
-        ++cutIndex;
-    }
-    // Make a pointer pointing to just after the leading zeroes
-    char *result = binaryNumber + cutIndex;
+    // Trim leading zeroes
+    result.erase(0, result.find_first_not_of('0'));
     // Print out the binary number result
     cout << "\033[1;1H\033[2J\033[1;4;32m\nYour binary number is:\033[0m " << result << "\n"
          << endl;
-    // FREE THE MEMORY
-    free(binaryNumber);
 }
 
 /**
@@ -233,31 +176,6 @@ void convertHexToBinary(string input)
  */
 void convertBinaryToHex(string input)
 {
-    // Create a hashmap lookup table for easy conversion
-    unordered_map<string, string> m;
-    m["1"] = "1";
-    m["10"] = "2";
-    m["11"] = "3";
-    m["100"] = "4";
-    m["101"] = "5";
-    m["110"] = "6";
-    m["111"] = "7";
-    m["0000"] = "0";
-    m["0001"] = "1";
-    m["0010"] = "2";
-    m["0011"] = "3";
-    m["0100"] = "4";
-    m["0101"] = "5";
-    m["0110"] = "6";
-    m["0111"] = "7";
-    m["1000"] = "8";
-    m["1001"] = "9";
-    m["1010"] = "A";
-    m["1011"] = "B";
-    m["1100"] = "C";
-    m["1101"] = "D";
-    m["1110"] = "E";
-    m["1111"] = "F";
     int inputLen = input.length();
     string result;
     string temp;
@@ -269,7 +187,7 @@ void convertBinaryToHex(string input)
         ++index;
     }
     // Append the converted string to result
-    result += m[temp];
+    result += binaryToHexTable[temp];
     // Iterate through the rest of the input string by groups of four
     for (int i = 0; i < (inputLen / 4); i += 4)
     {
@@ -279,10 +197,56 @@ void convertBinaryToHex(string input)
         temp += input[index + 2];
         temp += input[index + 3];
         // Append the converted string to result
-        result += m[temp];
+        result += binaryToHexTable[temp];
         index += 4;
     }
     // Print out the hexadecimal number result
     cout << "\033[1;1H\033[2J\033[1;4;32m\nYour hexadecimal number is:\033[0m " << result << "\n"
          << endl;
+}
+
+/**
+ * Function to be run when the program first starts to populate hashmaps for hex <-> binary conversion
+ */
+void buildConversionMaps()
+{
+    hexToBinaryTable['0'] = "0000";
+    hexToBinaryTable['1'] = "0001";
+    hexToBinaryTable['2'] = "0010";
+    hexToBinaryTable['3'] = "0011";
+    hexToBinaryTable['4'] = "0100";
+    hexToBinaryTable['5'] = "0101";
+    hexToBinaryTable['6'] = "0110";
+    hexToBinaryTable['7'] = "0111";
+    hexToBinaryTable['8'] = "1000";
+    hexToBinaryTable['9'] = "1001";
+    hexToBinaryTable['A'] = "1010";
+    hexToBinaryTable['B'] = "1011";
+    hexToBinaryTable['C'] = "1100";
+    hexToBinaryTable['D'] = "1101";
+    hexToBinaryTable['E'] = "1110";
+    hexToBinaryTable['F'] = "1111";
+    binaryToHexTable["1"] = "1";
+    binaryToHexTable["10"] = "2";
+    binaryToHexTable["11"] = "3";
+    binaryToHexTable["100"] = "4";
+    binaryToHexTable["101"] = "5";
+    binaryToHexTable["110"] = "6";
+    binaryToHexTable["111"] = "7";
+    binaryToHexTable["0000"] = "0";
+    binaryToHexTable["0001"] = "1";
+    binaryToHexTable["0010"] = "2";
+    binaryToHexTable["0011"] = "3";
+    binaryToHexTable["0100"] = "4";
+    binaryToHexTable["0101"] = "5";
+    binaryToHexTable["0110"] = "6";
+    binaryToHexTable["0111"] = "7";
+    binaryToHexTable["1000"] = "8";
+    binaryToHexTable["1001"] = "9";
+    binaryToHexTable["1010"] = "A";
+    binaryToHexTable["1011"] = "B";
+    binaryToHexTable["1100"] = "C";
+    binaryToHexTable["1101"] = "D";
+    binaryToHexTable["1110"] = "E";
+    binaryToHexTable["1111"] = "F";
 }
