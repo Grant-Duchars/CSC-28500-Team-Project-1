@@ -90,6 +90,13 @@ int main()
  */
 void convertDecimalToBinary(string input)
 {
+    // Check if input is a valid decimal number
+    if (input.find_first_not_of("0123456789") < input.length())
+    {
+        cout << "\033[1;1H\033[2J\033[4;31m\nERROR: The number you entered is not a valid decimal number\033[0m\n"
+             << endl;
+        return;
+    }
     // Convert string to integer
     int num = atoi(input.c_str());
     // Allocate space for result string
@@ -136,6 +143,13 @@ void convertBinaryToDecimal(string input)
     // Loop through binary number string
     for (int i = 0; i < inputLen; ++i)
     {
+        // Check if digit is zero or one
+        if (!(input[i] == '0' || input[i] == '1'))
+        {
+            cout << "\033[1;1H\033[2J\033[4;31m\nERROR: The number you entered is not a valid binary number\033[0m\n"
+                 << endl;
+            return;
+        }
         // Only care about ones in binary number string
         if (input[i] == '1')
         {
@@ -156,8 +170,15 @@ void convertBinaryToDecimal(string input)
  */
 void convertHexToBinary(string input)
 {
-    int inputLen = input.length();
+    // Check to see if input is a valid hexadecimal number
+    if (input.find_first_not_of("0123456789ABCDEF") < input.length())
+    {
+        cout << "\033[1;1H\033[2J\033[4;31m\nERROR: The number you entered is not a valid hexadecimal number\033[0m\n"
+             << endl;
+        return;
+    }
     string result;
+    int inputLen = input.length();
     // Iterate through input and use lookup table to convert
     for (int i = 0; i < inputLen; ++i)
     {
@@ -183,6 +204,13 @@ void convertBinaryToHex(string input)
     // Iterate through first (4 - n) bits if the length is not divisible by four
     for (int i = 0; i < (inputLen % 4); ++i)
     {
+        // Check if digit is zero or one
+        if (!(input[index] == '0' || input[index] == '1'))
+        {
+            cout << "\033[1;1H\033[2J\033[4;31m\nERROR: The number you entered is not a valid binary number\033[0m\n"
+                 << endl;
+            return;
+        }
         temp += input[index];
         ++index;
     }
@@ -196,6 +224,13 @@ void convertBinaryToHex(string input)
         temp += input[index + 1];
         temp += input[index + 2];
         temp += input[index + 3];
+        // Check to see if four digits are binary
+        if (binaryToHexTable.find(temp) == binaryToHexTable.end())
+        {
+            cout << "\033[1;1H\033[2J\033[4;31m\nERROR: The number you entered is not a valid binary number\033[0m\n"
+                 << endl;
+            return;
+        }
         // Append the converted string to result
         result += binaryToHexTable[temp];
         index += 4;
