@@ -217,7 +217,7 @@ void convertBinaryToHex(string input)
     // Append the converted string to result
     result += binaryToHexTable[temp];
     // Iterate through the rest of the input string by groups of four
-    for (int i = 0; i < (inputLen / 4); i += 4)
+    for (int i = 0; i < (inputLen / 4); ++i)
     {
         string temp;
         temp += input[index];
